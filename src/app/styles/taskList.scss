@@ -1,0 +1,86 @@
+.task {
+    &__container {
+        width: 100%;
+
+        &-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            list-style: none;
+
+            &-item {
+                padding: 15px;
+                border: 1px dashed #ddd;
+                transition: background-color 0.1s;
+                border-radius: 8px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+
+                &:hover {
+                    background-color: var(--hover);
+                }
+
+                &-content {
+                    gap: 15px;
+                    display: flex;
+                    align-items: center;
+
+                    .custom-checkbox {
+                        display: flex;
+                        align-items: center;
+
+                        input[type="checkbox"] {
+                            display: none;
+                        }
+
+                        .checkmark {
+                            width: 24px;
+                            height: 24px;
+                            border: 2px solid #ddd;
+                            border-radius: 4px;
+                            margin-right: 10px;
+                            position: relative;
+                            cursor: pointer;
+                            transition:
+                                background-color 0.2s,
+                                border-color 0.2s;
+                        }
+
+                        input[type="checkbox"]:checked + .checkmark {
+                            background-color: var(--light-blue);
+                            border-color: var(--blue);
+                        }
+
+                        input[type="checkbox"]:checked + .checkmark::after {
+                            content: "";
+                            position: absolute;
+                            left: 7px;
+                            top: 2px;
+                            width: 6px;
+                            height: 12px;
+                            border: solid var(--blue);
+                            border-width: 0 2px 2px 0;
+                            transform: rotate(45deg);
+                        }
+                    }
+
+                    &-task {
+                        &.completed {
+                            text-decoration: line-through;
+                            color: var(--strong-gray);
+                        }
+                    }
+                }
+
+                &-button {
+                    &-body {
+                        background: none;
+                        border: none;
+                        cursor: pointer;
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,95 +1,114 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
 
-export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+import React, { useEffect, useState } from "react";
+import TaskList from "./components/TaskList";
+import Button from "./components/Button";
+import AddTaskModal from "./components/AddTaskModal";
+import ConfirmDeleteModal from "./components/ConfirmDeleteModal";
+import "./styles/tasks.scss";
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
-}
+type Task = {
+	id: number;
+	name: string;
+	completed: boolean;
+};
+
+const HomePage: React.FC = () => {
+	const [tasks, setTasks] = useState<Task[]>([]);
+	const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+	const [taskToDelete, setTaskToDelete] = useState<number | null>(null);
+
+	useEffect(() => {
+		const storedTasks = localStorage.getItem("tasks");
+		if (storedTasks) {
+			setTasks(JSON.parse(storedTasks));
+		}
+	}, []);
+
+	const updateLocalStorage = (tasks: Task[]) => {
+		localStorage.setItem("tasks", JSON.stringify(tasks));
+	};
+
+	const toggleTaskCompletion = (id: number) => {
+		const updatedTasks = tasks.map((task) =>
+			task.id === id ? { ...task, completed: !task.completed } : task
+		);
+		setTasks(updatedTasks);
+		updateLocalStorage(updatedTasks);
+	};
+
+	const deleteTask = (id: number) => {
+		const updatedTasks = tasks.filter((task) => task.id !== id);
+		setTasks(updatedTasks);
+		updateLocalStorage(updatedTasks);
+		setIsDeleteModalOpen(false);
+	};
+
+	const addTask = (taskName: string) => {
+		const newTask = { id: Date.now(), name: taskName, completed: false }; // Gera um ID único
+		const updatedTasks = [...tasks, newTask];
+		setTasks(updatedTasks);
+		updateLocalStorage(updatedTasks);
+		setIsAddModalOpen(false);
+	};
+
+	const completedTasks = tasks.filter((task) => task.completed);
+
+	return (
+		<section className="task__page">
+			<div className="task__page-container">
+				<div className="task__page-container-title">
+					<h2 className="task__page-container-title-text">Suas tarefas de hoje</h2>
+				</div>
+
+				<TaskList
+					tasks={tasks.filter((task) => !task.completed)}
+					onToggle={toggleTaskCompletion}
+					onDelete={(id) => {
+						setTaskToDelete(id);
+						setIsDeleteModalOpen(true);
+					}}
+				/>
+
+				<div className="task__page-container-empty">
+					{tasks.filter((task) => !task.completed).length === 0 && (
+						<p className="task__page-container-empty-text">
+							Vamos lá! Crie sua primeira tarefa e comece a organizar seu dia! 🚀
+						</p>
+					)}
+				</div>
+
+				{completedTasks.length > 0 && (
+					<section className="completed__tasks-section">
+						<div className="completed__tasks-section-title">
+							<h2 className="completed__tasks-section-title-text">Tarefas finalizadas</h2>
+						</div>
+						<TaskList
+							tasks={completedTasks}
+							onToggle={toggleTaskCompletion}
+							onDelete={(id) => {
+								setTaskToDelete(id);
+								setIsDeleteModalOpen(true);
+							}}
+						/>
+					</section>
+				)}
+
+				{isAddModalOpen && <AddTaskModal onClose={() => setIsAddModalOpen(false)} onAdd={addTask} />}
+				{isDeleteModalOpen && taskToDelete !== null && (
+					<ConfirmDeleteModal
+						onDelete={() => deleteTask(taskToDelete)}
+						onCancel={() => setIsDeleteModalOpen(false)}
+					/>
+				)}
+			</div>
+
+			<div className="task__page-bottom">
+				<Button onClick={() => setIsAddModalOpen(true)}>Adicionar nova tarefa</Button>
+			</div>
+		</section>
+	);
+};
+
+export default HomePage;

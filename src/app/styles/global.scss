@@ -1,0 +1,26 @@
+// globals.scss
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+:root {
+    --white: #ffffff;
+    --black: #000000;
+    --button-gradient: linear-gradient(90deg, #0796d3 0%, #53c0f0 68.65%);
+    --button-gradient-cancel: linear-gradient(90deg, #d30707 0%, #f05353 68.65%);
+    --strong-gray: #0000008a;
+    --border-gray: #1018280d;
+    --border-light-gray: #d7dde9;
+    --background-light-gray: #e7eefb;
+    --hover: #f7f9fd;
+    --light-blue: #a0dcf6;
+    --blue: #0796d3;
+}

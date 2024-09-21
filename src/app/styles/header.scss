@@ -1,0 +1,34 @@
+// styles/header.scss
+.header {
+    max-width: 1340px;
+    margin: 25px auto;
+
+    &__container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 15px 20px;
+        border-bottom: 2px solid #d7dde9;
+        box-shadow: 0 3px 3px -2px rgba(0, 0, 0, 0.2);
+
+        @media (max-width: 768px) {
+            flex-wrap: wrap;
+            justify-content: start;
+            gap: 5px;
+            padding: 0 25px 20px;
+        }
+
+        &-user-name {
+            &-text {
+                font-family: "Inter Tight", sans-serif;
+                font-size: 24px;
+                font-weight: 500;
+                line-height: 29.04px;
+            }
+        }
+
+        &-date-info {
+            color: var(--strong-gray);
+        }
+    }
+}
