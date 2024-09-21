@@ -10,6 +10,10 @@
         transition: all 0.3s ease-in-out 0s;
         z-index: 11;
 
+        @media (max-width: 768px) {
+            align-items: start;
+        }
+
         &-content {
             max-width: 450px;
             max-height: 286px;
@@ -22,9 +26,13 @@
             border-radius: 8px;
             padding: 24px 32px 40px;
 
+            @media (max-width: 768px) {
+                border: 0;
+                box-shadow: none;
+            }
+
             &-title {
                 &-text {
-                    font-family: "Inter Tight", sans-serif;
                     font-size: 24px;
                     font-weight: 500;
                     line-height: 29.04px;
@@ -38,7 +46,6 @@
                 gap: 10px;
 
                 &-title {
-                    font-family: "Inter Tight", sans-serif;
                     font-size: 16px;
                     font-weight: 400;
                     line-height: 19.36px;
@@ -60,10 +67,13 @@
                 width: 100%;
                 gap: 10px;
 
+                @media (max-width: 768px) {
+                    flex-wrap: wrap;
+                }
+
                 &-cancel,
                 &-add,
                 &-delete {
-                    max-width: 185px;
                     height: 51px;
                     padding: 16px 24px;
                     border: none;
@@ -72,7 +82,6 @@
                     cursor: pointer;
 
                     &-text {
-                        font-family: "Inter Tight", sans-serif;
                         font-size: 16px;
                         font-weight: 500;
                         line-height: 19.36px;

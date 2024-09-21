@@ -46,7 +46,7 @@ const HomePage: React.FC = () => {
 	};
 
 	const addTask = (taskName: string) => {
-		const newTask = { id: Date.now(), name: taskName, completed: false }; // Gera um ID único
+		const newTask = { id: Date.now(), name: taskName, completed: false };
 		const updatedTasks = [...tasks, newTask];
 		setTasks(updatedTasks);
 		updateLocalStorage(updatedTasks);
@@ -71,13 +71,13 @@ const HomePage: React.FC = () => {
 					}}
 				/>
 
-				<div className="task__page-container-empty">
+				{/* <div className="task__page-container-empty">
 					{tasks.filter((task) => !task.completed).length === 0 && (
 						<p className="task__page-container-empty-text">
 							Vamos lá! Crie sua primeira tarefa e comece a organizar seu dia! 🚀
 						</p>
 					)}
-				</div>
+				</div> */}
 
 				{completedTasks.length > 0 && (
 					<section className="completed__tasks-section">

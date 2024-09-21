@@ -1,4 +1,3 @@
-// components/ConfirmDeleteModal.tsx
 interface ConfirmDeleteModalProps {
 	onDelete: () => void;
 	onCancel: () => void;

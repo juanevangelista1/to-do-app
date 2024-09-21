@@ -1,4 +1,3 @@
-// TaskList.tsx
 import "../styles/taskList.scss";
 import Image from "next/image";
 

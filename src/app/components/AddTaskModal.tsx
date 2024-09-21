@@ -1,4 +1,3 @@
-// components/AddTaskModal.tsx
 import { useState } from "react";
 import "../styles/modals.scss";
 
