@@ -3,8 +3,9 @@
 import React, { useEffect, useState } from "react";
 import TaskList from "./components/TaskList";
 import Button from "./components/Button";
-import "./styles/tasks.scss";
+import AddTaskModal from "./components/AddTaskModal";
 import ConfirmDeleteModal from "./components/ConfirmDeleteModal";
+import "./styles/tasks.scss";
 
 type Task = {
 	id: number;
@@ -15,10 +16,8 @@ type Task = {
 const HomePage: React.FC = () => {
 	const [tasks, setTasks] = useState<Task[]>([]);
 	const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-	const [newTaskName, setNewTaskName] = useState<string>("");
-
 	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-	const [taskToDeleteId, setTaskToDeleteId] = useState<number | null>(null);
+	const [taskToDelete, setTaskToDelete] = useState<number | null>(null);
 
 	useEffect(() => {
 		const storedTasks = localStorage.getItem("tasks");
@@ -39,90 +38,80 @@ const HomePage: React.FC = () => {
 		updateLocalStorage(updatedTasks);
 	};
 
-	const handleDeleteClick = (taskId: number) => {
-		setTaskToDeleteId(taskId);
-		setIsDeleteModalOpen(true);
-	};
-
-	const handleConfirmDelete = () => {
-		if (taskToDeleteId !== null) {
-			const updatedTasks = tasks.filter((t) => t.id !== taskToDeleteId);
-			setTasks(updatedTasks);
-			updateLocalStorage(updatedTasks);
-			setTaskToDeleteId(null);
-		}
+	const deleteTask = (id: number) => {
+		const updatedTasks = tasks.filter((task) => task.id !== id);
+		setTasks(updatedTasks);
+		updateLocalStorage(updatedTasks);
 		setIsDeleteModalOpen(false);
 	};
 
-	const handleCancelDelete = () => {
-		setIsDeleteModalOpen(false);
-		setTaskToDeleteId(null);
-	};
-
-	const addTask = () => {
-		if (newTaskName.trim() === "") return;
-		const newTask = { id: Date.now(), name: newTaskName, completed: false };
+	const addTask = (taskName: string) => {
+		const newTask = { id: Date.now(), name: taskName, completed: false };
 		const updatedTasks = [...tasks, newTask];
 		setTasks(updatedTasks);
 		updateLocalStorage(updatedTasks);
-		setNewTaskName("");
 		setIsAddModalOpen(false);
 	};
 
 	const editTaskName = (id: number, newName: string) => {
-		setTasks(tasks.map((task) => (task.id === id ? { ...task, name: newName } : task)));
-		updateLocalStorage(tasks);
+		const updatedTasks = tasks.map((task) => (task.id === id ? { ...task, name: newName } : task));
+		setTasks(updatedTasks);
+		updateLocalStorage(updatedTasks);
 	};
+
+	const completedTasks = tasks.filter((task) => task.completed);
 
 	return (
 		<section className="task__page">
 			<div className="task__page-container">
-				<h2 className="task__page-container-title-text">Suas tarefas de hoje</h2>
-
+				<div className="task__page-container-title">
+					<h2 className="task__page-container-title-text">Suas tarefas de hoje</h2>
+				</div>
 				<TaskList
 					tasks={tasks.filter((task) => !task.completed)}
 					onToggle={toggleTaskCompletion}
-					onDelete={handleDeleteClick}
-					onEdit={editTaskName}
+					onDelete={(id) => {
+						setTaskToDelete(id);
+						setIsDeleteModalOpen(true);
+					}}
+					onEdit={editTaskName} // Permite editar apenas tarefas não completadas
 				/>
+
+				{tasks.filter((task) => !task.completed).length === 0 && (
+					<p className="completed__tasks-section-title-text">
+						Vamos lá! Crie sua próxima tarefa e comece a organizar seu dia! 🚀
+					</p>
+				)}
+
+				{completedTasks.length > 0 && (
+					<section className="completed__tasks-section">
+						<div className="completed__tasks-section-title">
+							<h2 className="completed__tasks-section-title-text">Tarefas finalizadas</h2>
+						</div>
+						<TaskList
+							tasks={completedTasks}
+							onToggle={toggleTaskCompletion}
+							onDelete={(id) => {
+								setTaskToDelete(id);
+								setIsDeleteModalOpen(true);
+							}}
+							// Removido onEdit para tarefas completadas
+						/>
+					</section>
+				)}
+
+				{isAddModalOpen && <AddTaskModal onClose={() => setIsAddModalOpen(false)} onAdd={addTask} />}
+				{isDeleteModalOpen && taskToDelete !== null && (
+					<ConfirmDeleteModal
+						onDelete={() => deleteTask(taskToDelete)}
+						onCancel={() => setIsDeleteModalOpen(false)}
+					/>
+				)}
 			</div>
 
 			<div className="task__page-bottom">
 				<Button onClick={() => setIsAddModalOpen(true)}>Adicionar nova tarefa</Button>
 			</div>
-
-			{isAddModalOpen && (
-				<div className="modal__container">
-					<div className="modal__container-content">
-						<div className="modal__container-content-title">
-							<h2 className="modal__container-content-title-text">Adicionar Nova Tarefa</h2>
-						</div>
-						<div className="modal__container-content-middle">
-							<input
-								className="modal__container-content-middle-body"
-								type="text"
-								value={newTaskName}
-								onChange={(e) => setNewTaskName(e.target.value)}
-								placeholder="Digite o nome da tarefa"
-							/>
-						</div>
-						<div className="modal__container-content-buttons">
-							<button className="modal__container-content-buttons-add" onClick={addTask}>
-								<span className="modal__container-content-buttons-add-text">Salvar Tarefa</span>
-							</button>
-							<button
-								className="modal__container-content-buttons-cancel"
-								onClick={() => setIsAddModalOpen(false)}>
-								<span className="modal__container-content-buttons-cancel-text">Cancelar</span>
-							</button>
-						</div>
-					</div>
-				</div>
-			)}
-
-			{isDeleteModalOpen && (
-				<ConfirmDeleteModal onDelete={handleConfirmDelete} onCancel={handleCancelDelete} />
-			)}
 		</section>
 	);
 };
