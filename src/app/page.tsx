@@ -3,9 +3,8 @@
 import React, { useEffect, useState } from "react";
 import TaskList from "./components/TaskList";
 import Button from "./components/Button";
-import AddTaskModal from "./components/AddTaskModal";
-import ConfirmDeleteModal from "./components/ConfirmDeleteModal";
 import "./styles/tasks.scss";
+import ConfirmDeleteModal from "./components/ConfirmDeleteModal";
 
 type Task = {
 	id: number;
@@ -16,10 +15,11 @@ type Task = {
 const HomePage: React.FC = () => {
 	const [tasks, setTasks] = useState<Task[]>([]);
 	const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-	const [taskToDelete, setTaskToDelete] = useState<number | null>(null);
+	const [newTaskName, setNewTaskName] = useState<string>("");
 
-	// Carrega as tarefas do localStorage ao montar o componente
+	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+	const [taskToDeleteId, setTaskToDeleteId] = useState<number | null>(null);
+
 	useEffect(() => {
 		const storedTasks = localStorage.getItem("tasks");
 		if (storedTasks) {
@@ -27,46 +27,52 @@ const HomePage: React.FC = () => {
 		}
 	}, []);
 
-	// Atualiza o localStorage sempre que as tarefas mudam
-	useEffect(() => {
+	const updateLocalStorage = (tasks: Task[]) => {
 		localStorage.setItem("tasks", JSON.stringify(tasks));
-	}, [tasks]);
-
-	// Função genérica para alterar o estado dos modais
-	const toggleModal = (
-		modalSetter: React.Dispatch<React.SetStateAction<boolean>>,
-		value: boolean
-	) => {
-		modalSetter(value);
 	};
 
-	// Funções para manipulação de tarefas
 	const toggleTaskCompletion = (id: number) => {
-		setTasks((prevTasks) =>
-			prevTasks.map((task) => (task.id === id ? { ...task, completed: !task.completed } : task))
+		const updatedTasks = tasks.map((task) =>
+			task.id === id ? { ...task, completed: !task.completed } : task
 		);
+		setTasks(updatedTasks);
+		updateLocalStorage(updatedTasks);
 	};
 
-	const deleteTask = (id: number) => {
-		setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
+	const handleDeleteClick = (taskId: number) => {
+		setTaskToDeleteId(taskId);
+		setIsDeleteModalOpen(true);
+	};
+
+	const handleConfirmDelete = () => {
+		if (taskToDeleteId !== null) {
+			const updatedTasks = tasks.filter((t) => t.id !== taskToDeleteId);
+			setTasks(updatedTasks);
+			updateLocalStorage(updatedTasks);
+			setTaskToDeleteId(null);
+		}
 		setIsDeleteModalOpen(false);
 	};
 
-	const addTask = (taskName: string) => {
-		const newTask = { id: Date.now(), name: taskName, completed: false };
-		setTasks((prevTasks) => [...prevTasks, newTask]);
-		toggleModal(setIsAddModalOpen, false);
+	const handleCancelDelete = () => {
+		setIsDeleteModalOpen(false);
+		setTaskToDeleteId(null);
+	};
+
+	const addTask = () => {
+		if (newTaskName.trim() === "") return;
+		const newTask = { id: Date.now(), name: newTaskName, completed: false };
+		const updatedTasks = [...tasks, newTask];
+		setTasks(updatedTasks);
+		updateLocalStorage(updatedTasks);
+		setNewTaskName("");
+		setIsAddModalOpen(false);
 	};
 
 	const editTaskName = (id: number, newName: string) => {
-		setTasks((prevTasks) =>
-			prevTasks.map((task) => (task.id === id ? { ...task, name: newName } : task))
-		);
+		setTasks(tasks.map((task) => (task.id === id ? { ...task, name: newName } : task)));
+		updateLocalStorage(tasks);
 	};
-
-	// Filtrando tarefas pendentes e completadas
-	const pendingTasks = tasks.filter((task) => !task.completed);
-	const completedTasks = tasks.filter((task) => task.completed);
 
 	return (
 		<section className="task__page">
@@ -74,53 +80,49 @@ const HomePage: React.FC = () => {
 				<h2 className="task__page-container-title-text">Suas tarefas de hoje</h2>
 
 				<TaskList
-					tasks={pendingTasks}
+					tasks={tasks.filter((task) => !task.completed)}
 					onToggle={toggleTaskCompletion}
-					onDelete={(id) => {
-						setTaskToDelete(id);
-						toggleModal(setIsDeleteModalOpen, true);
-					}}
+					onDelete={handleDeleteClick}
 					onEdit={editTaskName}
 				/>
-
-				{/* Mostrar mensagem quando não houver tarefas pendentes */}
-				{/* {pendingTasks.length === 0 && (
-					<p className="task__page-container-empty-text">
-						Vamos lá! Crie sua primeira tarefa e comece a organizar seu dia! 🚀
-					</p>
-				)} */}
-
-				{/* Mostrar tarefas completadas */}
-				{completedTasks.length > 0 && (
-					<section className="completed__tasks-section">
-						<h2 className="completed__tasks-section-title-text">Tarefas finalizadas</h2>
-						<TaskList
-							tasks={completedTasks}
-							onToggle={toggleTaskCompletion}
-							onDelete={(id) => {
-								setTaskToDelete(id);
-								toggleModal(setIsDeleteModalOpen, true);
-							}}
-							onEdit={editTaskName}
-						/>
-					</section>
-				)}
-
-				{/* Modais para adicionar e deletar tarefas */}
-				{isAddModalOpen && (
-					<AddTaskModal onClose={() => toggleModal(setIsAddModalOpen, false)} onAdd={addTask} />
-				)}
-				{isDeleteModalOpen && taskToDelete !== null && (
-					<ConfirmDeleteModal
-						onDelete={() => deleteTask(taskToDelete)}
-						onCancel={() => toggleModal(setIsDeleteModalOpen, false)}
-					/>
-				)}
 			</div>
 
 			<div className="task__page-bottom">
-				<Button onClick={() => toggleModal(setIsAddModalOpen, true)}>Adicionar nova tarefa</Button>
+				<Button onClick={() => setIsAddModalOpen(true)}>Adicionar nova tarefa</Button>
 			</div>
+
+			{isAddModalOpen && (
+				<div className="modal__container">
+					<div className="modal__container-content">
+						<div className="modal__container-content-title">
+							<h2 className="modal__container-content-title-text">Adicionar Nova Tarefa</h2>
+						</div>
+						<div className="modal__container-content-middle">
+							<input
+								className="modal__container-content-middle-body"
+								type="text"
+								value={newTaskName}
+								onChange={(e) => setNewTaskName(e.target.value)}
+								placeholder="Digite o nome da tarefa"
+							/>
+						</div>
+						<div className="modal__container-content-buttons">
+							<button className="modal__container-content-buttons-add" onClick={addTask}>
+								<span className="modal__container-content-buttons-add-text">Salvar Tarefa</span>
+							</button>
+							<button
+								className="modal__container-content-buttons-cancel"
+								onClick={() => setIsAddModalOpen(false)}>
+								<span className="modal__container-content-buttons-cancel-text">Cancelar</span>
+							</button>
+						</div>
+					</div>
+				</div>
+			)}
+
+			{isDeleteModalOpen && (
+				<ConfirmDeleteModal onDelete={handleConfirmDelete} onCancel={handleCancelDelete} />
+			)}
 		</section>
 	);
 };

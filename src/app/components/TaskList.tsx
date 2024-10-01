@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "../styles/taskList.scss";
 import Image from "next/image";
+import "../styles/modals.scss";
 
 type Task = {
 	id: number;
@@ -12,21 +13,18 @@ interface TaskListProps {
 	tasks: Task[];
 	onToggle: (id: number) => void;
 	onDelete: (id: number) => void;
-	onEdit: (id: number, newName: string) => void; // Função para editar tarefa
+	onEdit: (id: number, newName: string) => void;
 }
 
 const TaskList: React.FC<TaskListProps> = ({ tasks, onToggle, onDelete, onEdit }) => {
-	// Estado local para a tarefa que está sendo editada
 	const [editingTaskId, setEditingTaskId] = useState<number | null>(null);
 	const [newTaskName, setNewTaskName] = useState<string>("");
 
-	// Função para iniciar a edição
 	const startEditing = (task: Task) => {
 		setEditingTaskId(task.id);
 		setNewTaskName(task.name);
 	};
 
-	// Função para salvar a edição
 	const saveEdit = (id: number) => {
 		if (newTaskName.trim() !== "") {
 			onEdit(id, newTaskName);
@@ -50,15 +48,14 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, onToggle, onDelete, onEdit }
 									type="text"
 									value={newTaskName}
 									onChange={(e) => setNewTaskName(e.target.value)}
-									onBlur={() => saveEdit(task.id)} // Salva a edição ao perder foco
-									onKeyDown={(e) => e.key === "Enter" && saveEdit(task.id)} // Salva ao pressionar Enter
+									onBlur={() => saveEdit(task.id)}
+									onKeyDown={(e) => e.key === "Enter" && saveEdit(task.id)}
 									autoFocus
 								/>
 							) : (
 								<span
 									className={`task__container-list-item-content-task ${task.completed ? "completed" : ""}`}
-									onClick={() => startEditing(task)} // Duplo clique para editar
-								>
+									onClick={() => startEditing(task)}>
 									{task.name}
 								</span>
 							)}

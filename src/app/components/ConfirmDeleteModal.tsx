@@ -1,3 +1,6 @@
+import React from "react";
+import "../styles/modals.scss";
+
 interface ConfirmDeleteModalProps {
 	onDelete: () => void;
 	onCancel: () => void;
