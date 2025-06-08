@@ -1,71 +1,88 @@
 .header {
-    max-width: 1340px;
-    margin: 25px auto;
+    width: 100%;
+    // background-color: var(--background-secondary);
+    border-bottom: 1px solid var(--border-color);
+    padding: 16px 0;
 
     &__container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 0 24px;
         display: flex;
-        align-items: center;
         justify-content: space-between;
-        padding: 0 15px 20px;
-        border-bottom: 2px solid var(--border-color);
-        transition: all 0.3s ease;
 
-        @media (max-width: 1024px) {
-            width: 95%;
-            margin: 0 auto;
-        }
+        gap: 16px;
+        align-items: center;
 
         @media (max-width: 768px) {
             flex-direction: column;
-            align-items: start;
-            justify-content: start;
-            gap: 5px;
-            padding: 0 0 20px;
-            width: 90%;
         }
 
-        &-logo {
-            flex-shrink: 0;
-        }
-
-        &-user-name {
-            margin: 0 0 0 75px;
-            flex: 1;
-
-            @media (max-width: 768px) {
-                margin: 0;
-            }
+        &-title {
+            text-align: center;
+            margin-bottom: 8px;
 
             &-text {
                 font-size: 24px;
-                font-weight: 500;
-                line-height: 29.04px;
+                font-weight: 700;
                 color: var(--text-primary);
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+        }
 
-                @media (max-width: 768px) {
-                    font-size: 16px;
-                }
+        &-logo {
+            display: flex;
+            justify-content: center;
+        }
+
+        &-user-name {
+            text-align: center;
+
+            &-text {
+                font-size: 18px;
+                color: var(--text-primary);
+                font-weight: 500;
             }
         }
 
         &-date-info {
-            font-size: 16px;
-            font-weight: 500;
-            line-height: 29.04px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
             color: var(--text-secondary);
-            flex-shrink: 0;
+            font-size: 14px;
         }
 
         &-theme-toggle {
             display: flex;
             align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            margin-left: 20px;
+        }
+    }
+}
 
-            @media (max-width: 768px) {
-                margin-left: 0;
-                align-self: flex-end;
+// Responsividade
+@media (max-width: 768px) {
+    .header {
+        &__container {
+            padding: 0 16px;
+
+            &-title {
+                &-text {
+                    font-size: 24px;
+                }
+            }
+
+            &-user-name {
+                &-text {
+                    font-size: 16px;
+                }
+            }
+
+            &-date-info {
+                flex-direction: column;
+                gap: 8px;
+                text-align: center;
             }
         }
     }

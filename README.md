@@ -18,6 +18,7 @@ A modern, responsive task management application built with Next.js 14, TypeScri
 - **Modern UI**: Clean, minimalist design with smooth animations and transitions
 - **Accessibility**: ARIA labels, keyboard navigation, and screen reader support
 - **User Personalization**: Custom username setup with welcome messages
+- **Task Editing**: Inline editing with save/cancel buttons and keyboard support
 
 ### 📅 Calendar Integration
 
@@ -48,8 +49,8 @@ A modern, responsive task management application built with Next.js 14, TypeScri
 
 ### Drag & Drop
 
-- **@dnd-kit**: Modern drag-and-drop library
-- **Sortable**: Task reordering functionality
+- **@dnd-kit/core**: Core drag-and-drop functionality
+- **@dnd-kit/sortable**: Task reordering implementation
 
 ## 🚀 Getting Started
 
@@ -63,7 +64,7 @@ A modern, responsive task management application built with Next.js 14, TypeScri
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/yourusername/to-do-app.git
+   git clone https://github.com/juan-evangelista/to-do-app.git
    cd to-do-app
    ```
 
@@ -71,20 +72,12 @@ A modern, responsive task management application built with Next.js 14, TypeScri
 
    ```bash
    npm install
-   # or
-   yarn install
-   # or
-   pnpm install
    ```
 
 3. **Run the development server**
 
    ```bash
    npm run dev
-   # or
-   yarn dev
-   # or
-   pnpm dev
    ```
 
 4. **Open your browser**
@@ -101,11 +94,10 @@ src/
 │   │   ├── WeekCalendar.tsx       # Weekly calendar view
 │   │   ├── TaskList.tsx           # Task list with drag & drop
 │   │   ├── TaskItem.tsx           # Individual task component
+│   │   ├── SortableTaskItem.tsx   # Draggable task wrapper
 │   │   ├── AddTaskModal.tsx       # Add new task modal
 │   │   ├── ConfirmDeleteModal.tsx # Delete confirmation modal
 │   │   └── Button.tsx             # Reusable button component
-│   ├── contexts/           # React contexts
-│   │   └── ThemeContext.tsx      # Theme management context
 │   ├── styles/             # SCSS stylesheets
 │   │   ├── globals.scss           # Global styles and theme variables
 │   │   ├── header.scss            # Header component styles
@@ -143,13 +135,6 @@ The application features a comprehensive theming system with:
 - Enhanced shadows for depth
 - Adjusted color palette for dark mode
 
-### Implementation
-
-- CSS Custom Properties for dynamic theming
-- Persistent theme preference in localStorage
-- System preference detection
-- Smooth transitions between themes
-
 ## 🔧 Available Scripts
 
 - `npm run dev` - Start development server
@@ -177,7 +162,7 @@ The application is fully responsive with breakpoints for:
 ### Task Management
 
 - **Create**: Add new tasks with a modal interface
-- **Edit**: Click on task names to edit inline
+- **Edit**: Click on task names to edit with save/cancel buttons
 - **Delete**: Remove tasks with confirmation dialog
 - **Complete**: Toggle task completion status
 - **Reorder**: Drag and drop to reorder tasks
@@ -188,13 +173,6 @@ The application is fully responsive with breakpoints for:
 - **Date Selection**: Click dates to filter tasks
 - **Visual Feedback**: Today and selected dates are highlighted
 - **Responsive**: Calendar adapts to screen size
-
-### Theme System
-
-- **Automatic Detection**: Detects system theme preference
-- **Manual Toggle**: User can override system preference
-- **Persistence**: Theme choice is remembered
-- **Smooth Transitions**: Animated theme switching
 
 ## 🤝 Contributing
 
@@ -207,14 +185,6 @@ This is an open-source project. Contributions are welcome!
 3. Commit your changes (`git commit -m 'Add amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
-
-### Development Guidelines
-
-- Follow TypeScript best practices
-- Use SCSS for styling
-- Maintain responsive design
-- Add appropriate ARIA labels for accessibility
-- Test on multiple devices and browsers
 
 ## 📄 License
 
@@ -237,4 +207,4 @@ If you have any questions or need help, please:
 
 ---
 
-**Made with ❤️ using Next.js and TypeScript**
+**Made with ❤️ by Juan Evangelista using Next.js and TypeScript**

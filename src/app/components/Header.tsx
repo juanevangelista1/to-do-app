@@ -65,53 +65,60 @@ const Header = () => {
 	};
 
 	return (
-		<header className='header'>
-			<section className='header__container'>
-				<div className='header__container-logo'>
-					<Image
-						src='/assets/image/logo.svg'
-						width={150}
-						height={36}
-						alt='Logo FocalPoint'
-					/>
-				</div>
-				<div className='header__container-user-name'>
-					<span className='header__container-user-name-text'>
-						{username ? `Bem-vindo de volta, ${username}` : 'Bem-vindo de volta!'}
-					</span>
-				</div>
-				<div className='header__container-date-info'>{getCurrentDate()}</div>
-				<div className='header__container-theme-toggle'>
-					<SimpleThemeToggle />
-				</div>
-			</section>
-
-			{isModalOpen && (
-				<section className='modal__container'>
-					<div className='modal__container-content'>
-						<div className='modal__container-title'>
-							<h2 className='modal__container-title-text'>Como você gostaria de ser chamado?</h2>
-						</div>
-						<div className='modal__container-content-middle'>
-							<input
-								className='modal__container-content-middle-body'
-								type='text'
-								value={newUsername}
-								onChange={(e) => setNewUsername(e.target.value)}
-								placeholder='Digite seu nome'
-							/>
-						</div>
-						<div className='modal__container-content-button'>
-							<button
-								onClick={handleSaveUsername}
-								className='modal__container-content-button-add'>
-								<span className='modal__container-content-button-add-text'>Salvar Nome</span>
-							</button>
+		<>
+			<header className='header'>
+				<section className='header__container'>
+					{/* <div className='header__container-title'>
+						<h2 className='header__container-title-text'>TO DO App</h2>
+					</div> */}
+					<div className='header__container-logo'>
+						<Image
+							src='/assets/image/new-logo.svg'
+							width={36}
+							height={36}
+							alt='Logo FocalPoint'
+						/>
+					</div>
+					<div className='header__container-user-name'>
+						<span className='header__container-user-name-text'>
+							{username ? `Bem-vindo de volta, ${username}` : 'Bem-vindo de volta!'}
+						</span>
+					</div>
+					<div className='header__container-date-info'>
+						{/* {getCurrentDate()} */}
+						<div className='header__container-theme-toggle'>
+							<SimpleThemeToggle />
 						</div>
 					</div>
 				</section>
-			)}
-		</header>
+
+				{isModalOpen && (
+					<section className='modal__container'>
+						<div className='modal__container-content'>
+							<div className='modal__container-title'>
+								<h2 className='modal__container-title-text'>Como você gostaria de ser chamado?</h2>
+							</div>
+							<div className='modal__container-content-middle'>
+								<input
+									className='modal__container-content-middle-body'
+									type='text'
+									value={newUsername}
+									onChange={(e) => setNewUsername(e.target.value)}
+									placeholder='Digite seu nome'
+								/>
+							</div>
+							<div className='modal__container-content-button'>
+								<button
+									onClick={handleSaveUsername}
+									className='modal__container-content-button-add'>
+									<span className='modal__container-content-button-add-text'>Salvar Nome</span>
+								</button>
+							</div>
+						</div>
+					</section>
+				)}
+			</header>
+		</>
 	);
 };
 

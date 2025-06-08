@@ -32,28 +32,48 @@ const WeekCalendar: React.FC<WeekCalendarProps> = ({ selectedDate, onDateSelect 
 	}, [selectedDate]);
 
 	const handleDateClick = (day: WeekDay) => {
-		onDateSelect(day.date);
+		onDateSelect(new Date(day.date));
+	};
+
+	const handleKeyDown = (e: React.KeyboardEvent, day: WeekDay) => {
+		if (e.key === 'Enter' || e.key === ' ') {
+			e.preventDefault();
+			handleDateClick(day);
+		}
 	};
 
 	return (
-		<div className='week-calendar'>
-			<div className='week-calendar__header'>
+		<div
+			className='week-calendar'
+			role='grid'
+			aria-label='Calendário semanal'>
+			<div
+				className='week-calendar__header'
+				role='row'>
 				{WEEKDAYS.map((day) => (
 					<div
 						key={day}
-						className='week-calendar__header-day'>
+						className='week-calendar__header-day'
+						role='columnheader'>
 						{day}
 					</div>
 				))}
 			</div>
-			<div className='week-calendar__days'>
+			<div
+				className='week-calendar__days'
+				role='rowgroup'>
 				{weekDays.map((day) => (
 					<button
 						key={day.date.toISOString()}
 						className={`week-calendar__day ${day.isToday ? 'week-calendar__day--today' : ''} ${
 							day.isSelected ? 'week-calendar__day--selected' : ''
 						}`}
-						onClick={() => handleDateClick(day)}>
+						onClick={() => handleDateClick(day)}
+						onKeyDown={(e) => handleKeyDown(e, day)}
+						role='gridcell'
+						aria-selected={day.isSelected}
+						aria-current={day.isToday ? 'date' : undefined}
+						tabIndex={0}>
 						<span className='week-calendar__day-number'>{day.dayOfMonth}</span>
 					</button>
 				))}

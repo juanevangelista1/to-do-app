@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Task } from './types/task';
 import TaskList from './components/TaskList';
 import Button from './components/Button';
@@ -17,69 +17,111 @@ const HomePage: React.FC = () => {
 	const [isAddModalOpen, setIsAddModalOpen] = useState<boolean>(false);
 	const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
 	const [taskToDelete, setTaskToDelete] = useState<number | null>(null);
+	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
-		const loadedTasks = taskStorageService.loadTasks();
-		// Garantir que todas as tarefas tenham uma ordem e data
-		const tasksWithDefaults = loadedTasks.map((task: Task, index: number) => ({
-			...task,
-			order: task.order ?? index,
-			date: task.date ?? formatDate(new Date()),
-		}));
-		// Ordenar as tarefas pela ordem
-		const sortedTasks = [...tasksWithDefaults].sort((a: Task, b: Task) => a.order - b.order);
-		setTasks(sortedTasks);
+		const loadTasks = () => {
+			try {
+				const loadedTasks = taskStorageService.loadTasks();
+				const tasksWithDefaults = loadedTasks.map((task: Task, index: number) => ({
+					...task,
+					order: task.order ?? index,
+					date: task.date ?? formatDate(new Date()),
+				}));
+				const sortedTasks = [...tasksWithDefaults].sort((a: Task, b: Task) => a.order - b.order);
+				setTasks(sortedTasks);
+			} catch (error) {
+				console.error('Erro ao carregar tarefas:', error);
+				setTasks([]);
+			} finally {
+				setIsLoading(false);
+			}
+		};
+
+		loadTasks();
 	}, []);
 
-	const updateTasks = (updatedTasks: Task[]): void => {
-		setTasks(updatedTasks);
-		taskStorageService.saveTasks(updatedTasks);
-	};
+	const updateTasks = useCallback((updatedTasks: Task[]): void => {
+		try {
+			setTasks(updatedTasks);
+			taskStorageService.saveTasks(updatedTasks);
+		} catch (error) {
+			console.error('Erro ao salvar tarefas:', error);
+		}
+	}, []);
 
-	const handleReorder = (reorderedTasks: Task[]): void => {
-		updateTasks(reorderedTasks);
-	};
+	const handleReorder = useCallback(
+		(reorderedTasks: Task[]): void => {
+			updateTasks(reorderedTasks);
+		},
+		[updateTasks]
+	);
 
-	const toggleTaskCompletion = (id: number): void => {
-		const updatedTasks = tasks.map((task: Task) =>
-			task.id === id ? { ...task, completed: !task.completed } : task
-		);
-		updateTasks(updatedTasks);
-	};
+	const toggleTaskCompletion = useCallback((id: number): void => {
+		setTasks((prevTasks) => {
+			const updatedTasks = prevTasks.map((task: Task) =>
+				task.id === id ? { ...task, completed: !task.completed } : task
+			);
+			taskStorageService.saveTasks(updatedTasks);
+			return updatedTasks;
+		});
+	}, []);
 
-	const deleteTask = (id: number): void => {
-		const updatedTasks = tasks.filter((task: Task) => task.id !== id);
-		updateTasks(updatedTasks);
+	const deleteTask = useCallback((id: number): void => {
+		setTasks((prevTasks) => {
+			const updatedTasks = prevTasks.filter((task: Task) => task.id !== id);
+			taskStorageService.saveTasks(updatedTasks);
+			return updatedTasks;
+		});
 		setIsDeleteModalOpen(false);
-	};
+	}, []);
 
-	const addTask = (taskName: string): void => {
-		const newTask: Task = {
-			id: Date.now(),
-			name: taskName,
-			completed: false,
-			order: tasks.filter((t: Task) => t.date === formatDate(selectedDate)).length,
-			date: formatDate(selectedDate),
-		};
-		const updatedTasks = [...tasks, newTask];
-		updateTasks(updatedTasks);
-		setIsAddModalOpen(false);
-	};
+	const addTask = useCallback(
+		(taskName: string): void => {
+			setTasks((prevTasks) => {
+				const newTask: Task = {
+					id: Date.now(),
+					name: taskName,
+					completed: false,
+					order: prevTasks.filter((t: Task) => t.date === formatDate(selectedDate)).length,
+					date: formatDate(selectedDate),
+				};
+				const updatedTasks = [...prevTasks, newTask];
+				taskStorageService.saveTasks(updatedTasks);
+				return updatedTasks;
+			});
+			setIsAddModalOpen(false);
+		},
+		[selectedDate]
+	);
 
-	const editTaskName = (id: number, newName: string): void => {
-		const updatedTasks = tasks.map((task: Task) =>
-			task.id === id ? { ...task, name: newName } : task
-		);
-		updateTasks(updatedTasks);
-	};
+	const editTaskName = useCallback((id: number, newName: string): void => {
+		setTasks((prevTasks) => {
+			const updatedTasks = prevTasks.map((task: Task) =>
+				task.id === id ? { ...task, name: newName } : task
+			);
+			taskStorageService.saveTasks(updatedTasks);
+			return updatedTasks;
+		});
+	}, []);
 
-	const handleDateSelect = (date: Date): void => {
+	const handleDateSelect = useCallback((date: Date): void => {
 		setSelectedDate(date);
-	};
+	}, []);
 
 	const tasksForSelectedDate = tasks.filter((task: Task) => task.date === formatDate(selectedDate));
 	const incompleteTasks = tasksForSelectedDate.filter((task: Task) => !task.completed);
 	const completedTasks = tasksForSelectedDate.filter((task: Task) => task.completed);
+
+	if (isLoading) {
+		return (
+			<section className='task__page'>
+				<div className='task__page-container'>
+					<p>Carregando tarefas...</p>
+				</div>
+			</section>
+		);
+	}
 
 	return (
 		<section className='task__page'>

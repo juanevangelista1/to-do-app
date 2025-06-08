@@ -5,7 +5,9 @@
     padding: 16px;
     margin-bottom: 24px;
     transition: all 0.3s ease;
-
+    @media (max-width: 768px) {
+        overflow: scroll;
+    }
     &__header {
         display: grid;
         grid-template-columns: repeat(7, 1fr);
@@ -17,7 +19,10 @@
             font-weight: 600;
             color: var(--text-secondary);
             font-size: 14px;
-            padding: 8px;
+            padding: 4px;
+            // &:first-child {
+            //     padding: 8px 0;
+            // }
         }
     }
 
@@ -33,7 +38,7 @@
         background: none;
         border-radius: 8px;
         cursor: pointer;
-        padding: 8px;
+        padding: 4px;
         display: flex;
         align-items: center;
         justify-content: center;

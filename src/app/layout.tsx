@@ -3,6 +3,7 @@ import Header from './components/Header';
 import { Metadata } from 'next';
 import { Inter_Tight } from 'next/font/google';
 import { ThemeProvider } from './contexts/ThemeContext';
+import { Footer } from './components/Footer';
 
 const interTight = Inter_Tight({
 	subsets: ['latin'],
@@ -42,6 +43,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 				<ThemeProvider>
 					<main>{children}</main>
 				</ThemeProvider>
+				<Footer />
 			</body>
 		</html>
 	);
