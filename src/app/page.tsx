@@ -151,7 +151,7 @@ const HomePage: React.FC = () => {
 
 				{incompleteTasks.length === 0 && (
 					<p className='completed__tasks-section-title-text'>
-						Vamos lá! Crie sua próxima tarefa e comece a organizar seu dia! 🚀
+						O TO DO App está aqui para te ajudar a organizar o seu dia! Vamos lá! 🚀
 					</p>
 				)}
 

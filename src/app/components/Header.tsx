@@ -5,41 +5,41 @@ import '../styles/header.scss';
 import Image from 'next/image';
 import SimpleThemeToggle from './SimpleThemeToggle';
 
-const getCurrentDate = () => {
-	const today = new Date();
-	const dayNames = [
-		'Domingo',
-		'Segunda-feira',
-		'Terça-feira',
-		'Quarta-feira',
-		'Quinta-feira',
-		'Sexta-feira',
-		'Sábado',
-	];
-	const monthNames = [
-		'Janeiro',
-		'Fevereiro',
-		'Março',
-		'Abril',
-		'Maio',
-		'Junho',
-		'Julho',
-		'Agosto',
-		'Setembro',
-		'Outubro',
-		'Novembro',
-		'Dezembro',
-	];
+// const getCurrentDate = () => {
+// 	const today = new Date();
+// 	const dayNames = [
+// 		'Domingo',
+// 		'Segunda-feira',
+// 		'Terça-feira',
+// 		'Quarta-feira',
+// 		'Quinta-feira',
+// 		'Sexta-feira',
+// 		'Sábado',
+// 	];
+// 	const monthNames = [
+// 		'Janeiro',
+// 		'Fevereiro',
+// 		'Março',
+// 		'Abril',
+// 		'Maio',
+// 		'Junho',
+// 		'Julho',
+// 		'Agosto',
+// 		'Setembro',
+// 		'Outubro',
+// 		'Novembro',
+// 		'Dezembro',
+// 	];
 
-	const day = dayNames[today.getDay()];
-	const dayOfMonth = today.getDate().toString().padStart(2, '0');
-	const month = monthNames[today.getMonth()];
-	const year = today.getFullYear();
+// 	const day = dayNames[today.getDay()];
+// 	const dayOfMonth = today.getDate().toString().padStart(2, '0');
+// 	const month = monthNames[today.getMonth()];
+// 	const year = today.getFullYear();
 
-	const formattedDate = `${dayOfMonth} de ${month} de ${year}`;
+// 	const formattedDate = `${dayOfMonth} de ${month} de ${year}`;
 
-	return `${day}, ${formattedDate}`;
-};
+// 	return `${day}, ${formattedDate}`;
+// };
 
 const Header = () => {
 	const [username, setUsername] = useState<string | null>(null);
@@ -85,7 +85,6 @@ const Header = () => {
 						</span>
 					</div>
 					<div className='header__container-date-info'>
-						{/* {getCurrentDate()} */}
 						<div className='header__container-theme-toggle'>
 							<SimpleThemeToggle />
 						</div>
