@@ -1,4 +1,4 @@
-import "../styles/buttons.scss";
+import '../styles/buttons.scss';
 
 interface ButtonProps {
 	onClick: () => void;
@@ -7,8 +7,10 @@ interface ButtonProps {
 
 const Button: React.FC<ButtonProps> = ({ onClick, children }) => {
 	return (
-		<button className="button__bottom" onClick={onClick}>
-			<span className="button__bottom-text">{children}</span>
+		<button
+			className='button__bottom'
+			onClick={onClick}>
+			<span className='button__bottom-text'>{children}</span>
 		</button>
 	);
 };

@@ -6,12 +6,23 @@
     border: none;
     background: var(--button-gradient);
     cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-hover);
+    }
+
+    &:focus {
+        outline: 2px solid var(--accent-color);
+        outline-offset: 2px;
+    }
 
     &-text {
-        font-family: Inter Tight;
+        font-family: var(--font-inter-tight), 'Inter Tight', sans-serif;
         font-size: 16px;
         font-weight: 500;
         line-height: 19.36px;
-        color: var(--white);
+        color: var(--background-secondary);
     }
 }

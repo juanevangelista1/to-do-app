@@ -5,7 +5,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background: rgba(255, 255, 255, 0.8);
+        background: rgba(0, 0, 0, 0.5);
         backdrop-filter: blur(10px);
         transition: all 0.3s ease-in-out 0s;
         z-index: 11;
@@ -19,12 +19,13 @@
             max-height: 286px;
             margin: 0 auto;
             width: 100%;
-            background: #fefefe;
-            border: 1px solid #deeffe;
+            background: var(--background-secondary);
+            border: 1px solid var(--border-color);
             box-sizing: border-box;
-            box-shadow: 0 4px 4px rgba(0, 0, 0, 0.2509803922);
+            box-shadow: var(--shadow-hover);
             border-radius: 8px;
             padding: 24px 32px 40px;
+            transition: all 0.3s ease;
 
             @media (max-width: 768px) {
                 border: 0;
@@ -37,6 +38,7 @@
                     font-weight: 500;
                     line-height: 29.04px;
                     text-align: left;
+                    color: var(--text-primary);
                 }
             }
 
@@ -50,6 +52,7 @@
                     font-weight: 400;
                     line-height: 19.36px;
                     text-align: left;
+                    color: var(--text-primary);
                 }
 
                 &-body {
@@ -58,7 +61,20 @@
                     padding: 16px;
                     gap: 16px;
                     border-radius: 8px;
-                    border: 1px solid var(--border-light-gray);
+                    border: 1px solid var(--border-color);
+                    background-color: var(--background-primary);
+                    color: var(--text-primary);
+                    transition: all 0.3s ease;
+
+                    &:focus {
+                        outline: none;
+                        border-color: var(--accent-color);
+                        box-shadow: 0 0 0 2px var(--accent-color) 20;
+                    }
+
+                    &::placeholder {
+                        color: var(--text-muted);
+                    }
                 }
             }
 
@@ -80,6 +96,12 @@
                     border-radius: 8px;
                     width: 100%;
                     cursor: pointer;
+                    transition: all 0.3s ease;
+
+                    &:hover {
+                        transform: translateY(-2px);
+                        box-shadow: var(--shadow-hover);
+                    }
 
                     &-text {
                         font-size: 16px;
@@ -91,7 +113,7 @@
                 &-add {
                     background: var(--button-gradient);
                     &-text {
-                        color: var(--white);
+                        color: var(--background-secondary);
                     }
                 }
 
@@ -99,7 +121,7 @@
                     background: var(--background-light-gray);
 
                     &-text {
-                        color: var(--black);
+                        color: var(--text-primary);
                     }
                 }
 
@@ -107,7 +129,7 @@
                     background: var(--button-gradient-cancel);
 
                     &-text {
-                        color: var(--white);
+                        color: var(--background-secondary);
                     }
                 }
             }

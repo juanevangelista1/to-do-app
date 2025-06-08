@@ -11,15 +11,27 @@
 
             &-item {
                 padding: 15px;
-                border: 1px dashed var(--border-light-gray);
-                transition: background-color 0.1s;
+                border: 1px dashed var(--border-color);
+                transition: all 0.3s ease;
                 border-radius: 8px;
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
+                background-color: var(--background-secondary);
 
                 &:hover {
-                    background-color: var(--hover);
+                    background-color: var(--background-hover);
+                    box-shadow: var(--shadow);
+                }
+
+                &:active {
+                    cursor: grabbing;
+                }
+
+                &.dragging {
+                    opacity: 0.5;
+                    background-color: var(--background-hover);
+                    box-shadow: var(--shadow-hover);
                 }
 
                 &-content {
@@ -31,30 +43,29 @@
                         display: flex;
                         align-items: center;
 
-                        input[type="checkbox"] {
+                        input[type='checkbox'] {
                             display: none;
                         }
 
                         .checkmark {
                             width: 24px;
                             height: 24px;
-                            border: 2px solid var(--input-gray);
+                            border: 2px solid var(--text-muted);
                             border-radius: 4px;
                             margin-right: 10px;
                             position: relative;
                             cursor: pointer;
-                            transition:
-                                background-color 0.2s,
-                                border-color 0.2s;
+                            transition: all 0.3s ease;
+                            background-color: var(--background-primary);
                         }
 
-                        input[type="checkbox"]:checked + .checkmark {
+                        input[type='checkbox']:checked + .checkmark {
                             background-color: var(--light-blue);
                             border-color: var(--blue);
                         }
 
-                        input[type="checkbox"]:checked + .checkmark::after {
-                            content: "";
+                        input[type='checkbox']:checked + .checkmark::after {
+                            content: '';
                             position: absolute;
                             left: 7px;
                             top: 2px;
@@ -67,10 +78,12 @@
                     }
 
                     &-task {
-                        color: var(--black);
+                        color: var(--text-primary);
+                        transition: all 0.3s ease;
+
                         &.completed {
                             text-decoration: line-through;
-                            color: var(--strong-gray);
+                            color: var(--text-secondary);
                         }
                     }
                 }
@@ -80,9 +93,32 @@
                         background: none;
                         border: none;
                         cursor: pointer;
+                        color: var(--text-secondary);
+                        transition: all 0.3s ease;
+
+                        &:hover {
+                            color: var(--text-primary);
+                            transform: scale(1.1);
+                        }
                     }
                 }
             }
         }
+    }
+}
+
+// Adicionar estilos para o item sendo arrastado
+[data-draggable='true'] {
+    touch-action: none;
+    user-select: none;
+    -webkit-user-drag: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+// Adicionar estilos para o container durante o drag
+.task__container-list {
+    &.dragging-over {
+        background-color: var(--background-hover);
+        border-radius: 4px;
     }
 }

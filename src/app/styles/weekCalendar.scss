@@ -1,0 +1,81 @@
+.week-calendar {
+    background-color: var(--background-secondary);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    padding: 16px;
+    margin-bottom: 24px;
+    transition: all 0.3s ease;
+
+    &__header {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 8px;
+        margin-bottom: 12px;
+        text-align: center;
+
+        &-day {
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 14px;
+            padding: 8px;
+        }
+    }
+
+    &__days {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 8px;
+    }
+
+    &__day {
+        aspect-ratio: 1;
+        border: none;
+        background: none;
+        border-radius: 8px;
+        cursor: pointer;
+        padding: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+        position: relative;
+        color: var(--text-primary);
+
+        &:hover {
+            background-color: var(--background-hover);
+        }
+
+        &--today {
+            background-color: var(--light-blue);
+            color: var(--blue);
+            font-weight: 600;
+
+            &::after {
+                content: '';
+                position: absolute;
+                bottom: 4px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 4px;
+                height: 4px;
+                background-color: var(--blue);
+                border-radius: 50%;
+            }
+        }
+
+        &--selected {
+            background-color: var(--blue);
+            color: var(--background-secondary);
+            font-weight: 600;
+
+            &:hover {
+                background-color: var(--blue);
+                opacity: 0.9;
+            }
+        }
+
+        &-number {
+            font-size: 16px;
+        }
+    }
+}
