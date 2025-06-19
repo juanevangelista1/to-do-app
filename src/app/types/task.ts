@@ -1,9 +1,12 @@
+export type Priority = 'low' | 'medium' | 'high';
+
 export interface Task {
 	id: number;
 	name: string;
 	completed: boolean;
 	order: number;
 	date: string; // Data no formato YYYY-MM-DD
+	priority: Priority;
 }
 
 export interface TaskListProps {

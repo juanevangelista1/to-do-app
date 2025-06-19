@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState, useCallback } from 'react';
-import { Task } from './types/task';
+import { Task, Priority } from './types/task';
 import TaskList from './components/TaskList';
 import Button from './components/Button';
 import AddTaskModal from './components/AddTaskModal';
@@ -27,6 +27,7 @@ const HomePage: React.FC = () => {
 					...task,
 					order: task.order ?? index,
 					date: task.date ?? formatDate(new Date()),
+					priority: task.priority ?? 'medium',
 				}));
 				const sortedTasks = [...tasksWithDefaults].sort((a: Task, b: Task) => a.order - b.order);
 				setTasks(sortedTasks);
@@ -77,7 +78,7 @@ const HomePage: React.FC = () => {
 	}, []);
 
 	const addTask = useCallback(
-		(taskName: string): void => {
+		(taskName: string, priority: Priority): void => {
 			setTasks((prevTasks) => {
 				const newTask: Task = {
 					id: Date.now(),
@@ -85,6 +86,7 @@ const HomePage: React.FC = () => {
 					completed: false,
 					order: prevTasks.filter((t: Task) => t.date === formatDate(selectedDate)).length,
 					date: formatDate(selectedDate),
+					priority: priority,
 				};
 				const updatedTasks = [...prevTasks, newTask];
 				taskStorageService.saveTasks(updatedTasks);
@@ -109,7 +111,20 @@ const HomePage: React.FC = () => {
 		setSelectedDate(date);
 	}, []);
 
-	const tasksForSelectedDate = tasks.filter((task: Task) => task.date === formatDate(selectedDate));
+	// Função utilitária para ordenar por prioridade
+	function sortByPriority(tasks: Task[]): Task[] {
+		const priorityOrder = { high: 0, medium: 1, low: 2 };
+		return [...tasks].sort((a, b) => {
+			if (priorityOrder[a.priority] !== priorityOrder[b.priority]) {
+				return priorityOrder[a.priority] - priorityOrder[b.priority];
+			}
+			return a.order - b.order;
+		});
+	}
+
+	const tasksForSelectedDate = sortByPriority(
+		tasks.filter((task: Task) => task.date === formatDate(selectedDate))
+	);
 	const incompleteTasks = tasksForSelectedDate.filter((task: Task) => !task.completed);
 	const completedTasks = tasksForSelectedDate.filter((task: Task) => task.completed);
 
@@ -175,7 +190,7 @@ const HomePage: React.FC = () => {
 				{isAddModalOpen && (
 					<AddTaskModal
 						onClose={() => setIsAddModalOpen(false)}
-						onAdd={addTask}
+						onAdd={(taskName, priority) => addTask(taskName, priority)}
 					/>
 				)}
 				{isDeleteModalOpen && taskToDelete !== null && (

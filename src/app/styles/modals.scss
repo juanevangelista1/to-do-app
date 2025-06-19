@@ -30,6 +30,9 @@
             @media (max-width: 768px) {
                 border: 0;
                 box-shadow: none;
+                position: relative;
+                top: 130px;
+                max-height: 450px;
             }
 
             &-title {
@@ -74,6 +77,88 @@
 
                     &::placeholder {
                         color: var(--text-muted);
+                    }
+                }
+            }
+
+            &-priority {
+                margin: 20px 0;
+                display: grid;
+                gap: 10px;
+
+                &-title {
+                    font-size: 16px;
+                    font-weight: 400;
+                    line-height: 19.36px;
+                    text-align: left;
+                    color: var(--text-primary);
+                }
+
+                &-options {
+                    display: flex;
+                    gap: 15px;
+                    flex-wrap: wrap;
+
+                    @media (max-width: 768px) {
+                        gap: 10px;
+                    }
+                }
+
+                &-option {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    cursor: pointer;
+                    padding: 8px 12px;
+                    border-radius: 6px;
+                    transition: all 0.3s ease;
+                    border: 1px solid transparent;
+
+                    &:hover {
+                        background-color: var(--background-hover);
+                        border-color: var(--border-color);
+                    }
+
+                    &-input {
+                        display: none;
+                    }
+
+                    &-indicator {
+                        width: 16px;
+                        height: 16px;
+                        border-radius: 50%;
+                        border: 2px solid var(--background-secondary);
+                        box-shadow: 0 0 0 2px transparent;
+                        transition: all 0.3s ease;
+
+                        &.priority-low {
+                            background-color: #22c55e;
+                        }
+
+                        &.priority-medium {
+                            background-color: #eab308;
+                        }
+
+                        &.priority-high {
+                            background-color: #ef4444;
+                        }
+                    }
+
+                    &-label {
+                        font-size: 14px;
+                        font-weight: 400;
+                        color: var(--text-primary);
+                        white-space: nowrap;
+                    }
+
+                    input:checked + &-indicator {
+                        box-shadow: 0 0 0 2px var(--accent-color);
+                        transform: scale(1.1);
+                    }
+
+                    input:checked ~ &-label {
+                        font-weight: 500;
+                        color: var(--accent-color);
                     }
                 }
             }

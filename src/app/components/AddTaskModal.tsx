@@ -1,13 +1,15 @@
 import { useState, useRef, useEffect } from 'react';
+import { Priority } from '../types/task';
 import '../styles/modals.scss';
 
 interface AddTaskModalProps {
 	onClose: () => void;
-	onAdd: (taskName: string) => void;
+	onAdd: (taskName: string, priority: Priority) => void;
 }
 
 const AddTaskModal: React.FC<AddTaskModalProps> = ({ onClose, onAdd }) => {
 	const [taskName, setTaskName] = useState<string>('');
+	const [priority, setPriority] = useState<Priority>('medium');
 	const inputRef = useRef<HTMLInputElement>(null);
 
 	useEffect(() => {
@@ -20,8 +22,9 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ onClose, onAdd }) => {
 	const handleAdd = () => {
 		const trimmedName = taskName.trim();
 		if (trimmedName) {
-			onAdd(trimmedName);
+			onAdd(trimmedName, priority);
 			setTaskName('');
+			setPriority('medium');
 		}
 	};
 
@@ -32,6 +35,12 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ onClose, onAdd }) => {
 			onClose();
 		}
 	};
+
+	const priorityOptions = [
+		{ value: 'low' as Priority, label: 'Baixa', color: 'green' },
+		{ value: 'medium' as Priority, label: 'Média', color: 'yellow' },
+		{ value: 'high' as Priority, label: 'Alta', color: 'red' },
+	];
 
 	return (
 		<section className='modal__container'>
@@ -51,6 +60,29 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ onClose, onAdd }) => {
 						placeholder='Digite o título da tarefa'
 						autoComplete='off'
 					/>
+				</div>
+				<div className='modal__container-content-priority'>
+					<span className='modal__container-content-priority-title'>Prioridade</span>
+					<div className='modal__container-content-priority-options'>
+						{priorityOptions.map((option) => (
+							<label
+								key={option.value}
+								className='modal__container-content-priority-option'>
+								<input
+									type='radio'
+									name='priority'
+									value={option.value}
+									checked={priority === option.value}
+									onChange={(e) => setPriority(e.target.value as Priority)}
+									className='modal__container-content-priority-option-input'
+								/>
+								<span
+									className={`modal__container-content-priority-option-indicator priority-${option.value}`}
+									style={{ backgroundColor: option.color }}></span>
+								<span className='modal__container-content-priority-option-label'>{option.label}</span>
+							</label>
+						))}
+					</div>
 				</div>
 				<div className='modal__container-content-buttons'>
 					<button

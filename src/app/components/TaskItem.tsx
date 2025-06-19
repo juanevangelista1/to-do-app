@@ -115,6 +115,13 @@ const TaskItem: React.FC<TaskItemProps> = ({
 			className='task__container-list-item'
 			onClick={(e) => e.stopPropagation()}>
 			<div className='task__container-list-item-content'>
+				<div className='task__container-list-item-priority'>
+					<span
+						className={`task__container-list-item-priority-indicator priority-${task.priority} animate-subtle-blink`}
+						title={`Prioridade ${
+							task.priority === 'low' ? 'baixa' : task.priority === 'medium' ? 'média' : 'alta'
+						}`}></span>
+				</div>
 				<label className='custom-checkbox'>
 					<input
 						type='checkbox'
