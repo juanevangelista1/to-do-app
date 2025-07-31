@@ -149,9 +149,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
 							onKeyDown={handleKeyDown}
 							className='task__container-list-item-content-input'
 							aria-label='Editar nome da tarefa'
-							// Permite espaços e caracteres especiais
 							pattern='.*'
-							// Não limita o tamanho do texto
 							maxLength={100}
 						/>
 						<div className='task__container-list-item-edit-buttons'>
